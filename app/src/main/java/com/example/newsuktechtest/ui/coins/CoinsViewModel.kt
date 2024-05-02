@@ -1,5 +1,6 @@
 package com.example.newsuktechtest.ui.coins
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsuktechtest.data.NetworkClient
@@ -19,6 +20,10 @@ class CoinsViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<CoinsUiState>(CoinsUiState.Loading)
     val uiState: StateFlow<CoinsUiState> = _uiState
+
+    private val _uiDetailsState = MutableStateFlow<CoinDetailsUiState>(CoinDetailsUiState.Hidden)
+    val uiDetailsState: StateFlow<CoinDetailsUiState> =_uiDetailsState
+
     init {
         getData()
     }
@@ -29,12 +34,30 @@ class CoinsViewModel @Inject constructor(
             val result = networkClient.getCoins()
             if(result.isSuccess){
                 val resultData = result.getOrNull()
-                Timber.d("data: ",resultData)
+                Timber.d("Coins: ",resultData)
                 _uiState.value = CoinsUiState.Success(resultData)
             }else{
                 _uiState.value = CoinsUiState.Error(result.toString())
 
             }
         }
+    }
+
+    fun getCoinDetail(id: String){
+        _uiDetailsState.value = CoinDetailsUiState.Loading
+        viewModelScope.launch(dispatcherProvider.main()) {
+            val result = networkClient.getCoinDetail(id)
+            if(result.isSuccess){
+                val resultData = result.getOrNull()
+                Timber.i("CoinDetails: ", resultData)
+                _uiDetailsState.value = CoinDetailsUiState.Success(resultData)
+            }else{
+                _uiDetailsState.value = CoinDetailsUiState.Error(result.toString())
+            }
+        }
+    }
+
+    fun closeDetails(){
+        _uiDetailsState.value = CoinDetailsUiState.Hidden
     }
 }

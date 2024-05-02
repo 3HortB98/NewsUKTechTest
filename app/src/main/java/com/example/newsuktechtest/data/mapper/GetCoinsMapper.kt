@@ -13,7 +13,9 @@ class GetCoinsMapper @Inject constructor(
             Coins(
                 coins = coinsDTO. map {
                     Coin(
-                        name = it.name
+                        name = it.name,
+                        id = it.id,
+                        coinDetails = null
                     )
                 } as ArrayList<Coin>
             )

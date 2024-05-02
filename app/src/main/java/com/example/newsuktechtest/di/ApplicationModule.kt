@@ -4,12 +4,14 @@ import android.app.Application
 import android.content.Context
 import android.net.Uri
 import com.example.newsuktechtest.data.api.CoinsService
+import com.example.newsuktechtest.data.models.dto.CoinType
 import com.example.newsuktechtest.utils.Constants.API
 import com.example.newsuktechtest.utils.Constants.API_TIMEOUT
 import com.example.newsuktechtest.utils.Constants.CACHE_SIZE
 import com.example.newsuktechtest.utils.Constants.COINS_CLIENT
 import com.example.newsuktechtest.utils.Constants.COINS_URI
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.EnumJsonAdapter
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -74,7 +76,8 @@ class ApplicationModule {
     fun providesMoshi() : Moshi = Moshi
         .Builder()
         .add(Date::class.java, Rfc3339DateJsonAdapter())
-        .addLast(KotlinJsonAdapterFactory())
+        .add(KotlinJsonAdapterFactory())
+        //.add(EnumJsonAdapter.create(CoinType::class.java).withUnknownFallback(CoinType.Unknown))
         .build()
 
     @Provides
