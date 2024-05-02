@@ -91,4 +91,8 @@ dependencies {
     //timber
     implementation(libs.timber)
 
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.org.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.io.mockk)
+
 }
