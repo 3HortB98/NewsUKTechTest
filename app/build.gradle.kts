@@ -95,4 +95,6 @@ dependencies {
     testImplementation(libs.org.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.io.mockk)
 
+    //coil image
+    implementation(libs.coil.compose)
 }

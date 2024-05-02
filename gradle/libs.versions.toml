@@ -19,6 +19,7 @@ timber = "5.0.1"
 coreTesting = "2.2.0"
 coroutinesTest = "1.5.0"
 mockk = "1.13.3"
+coil = "2.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +52,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting"}
 org-jetbrains-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest"}
 io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk"}
+coil-compose = {group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

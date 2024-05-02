@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,30 +22,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.newsuktechtest.ui.coinDetail.ItemDetailDialog
-import timber.log.Timber
 
 @Composable
 fun CoinsScreen(
     coinsViewModel: CoinsViewModel = viewModel(),
-    modifier: Modifier = Modifier) {
-    val uiState = coinsViewModel.uiState.collectAsState()
+    modifier: Modifier = Modifier
+) {
+    var uiState = coinsViewModel.uiState.collectAsState()
     val coinDetailsState = coinsViewModel.uiDetailsState.collectAsState()
     var showDetailsDialog by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(text = "Coins", fontSize = 20.sp)
-        Button(onClick = {coinsViewModel.getData()}){
+        Button(onClick = { coinsViewModel.getData() }) {
             Text(text = "Refresh")
         }
 
-        when(uiState.value){
-            is CoinsUiState.Loading ->{
+        when (uiState.value) {
+            is CoinsUiState.Loading -> {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -53,43 +57,49 @@ fun CoinsScreen(
                     CircularProgressIndicator()
                 }
             }
-            is CoinsUiState.Success ->{
 
-                LazyColumn(modifier = Modifier.fillMaxSize()){
-                    val coins = (uiState.value as CoinsUiState.Success).coins
-                    items(coins?.coins?.sortedBy { it.name }.orEmpty()){coin ->
-                        CoinItem(coin, onClick = {
-                            coin.id?.let {
-                                coinsViewModel.getCoinDetail(it)
+            is CoinsUiState.Success -> {
+                // display items in list
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    if (uiState.value is CoinsUiState.Success) {
+                        val coins = (uiState.value as CoinsUiState.Success).coins
+                        items(coins?.coins?.sortedBy { it.name }.orEmpty()) { coin ->
+                            CoinItem(coin, onClick = {
+                                coin.id?.let {
+                                    coinsViewModel.getCoinDetail(it)
 
-                            }
-                        })
+                                }
+                            })
+                            Divider(thickness = 1.dp, color = Color.Black)
+                        }
                     }
                 }
 
             }
+
             is CoinsUiState.Error -> {
-                Text(text = (uiState.value as CoinsUiState.Error).message)}
+                // show error message
+                Text(text = (uiState.value as CoinsUiState.Error).message)
+            }
         }
 
-        when(coinDetailsState.value){
-            is CoinDetailsUiState.Success ->{
-                Timber.d("CoinState")
+        when (coinDetailsState.value) {
+            is CoinDetailsUiState.Success -> {
+                //show details dialog
                 showDetailsDialog = showDetailsDialog.not()
                 val coin = (coinDetailsState.value as CoinDetailsUiState.Success).coin
                 if (coin != null) {
-//                    if (showDetailsDialog){
-                        ItemDetailDialog(coin) {
-                            showDetailsDialog = false
-                            coinsViewModel.closeDetails()
-                        }
-                   // }
+                    ItemDetailDialog(coin) {
+                        showDetailsDialog = false
+                        coinsViewModel.closeDetails()
+                    }
 
                 }
             }
 
             is CoinDetailsUiState.Error -> {
-                Dialog(onDismissRequest = {showDetailsDialog = false}) {
+                //show error dialog
+                Dialog(onDismissRequest = { showDetailsDialog = false }) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -102,10 +112,8 @@ fun CoinsScreen(
                 }
 
             }
-            is CoinDetailsUiState.Hidden -> {
 
-            }
-            is CoinDetailsUiState.Loading -> {
+            is CoinDetailsUiState.Hidden -> {
 
             }
         }

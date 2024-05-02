@@ -34,7 +34,6 @@ class CoinsViewModel @Inject constructor(
             val result = networkClient.getCoins()
             if(result.isSuccess){
                 val resultData = result.getOrNull()
-                Timber.d("Coins: ",resultData)
                 _uiState.value = CoinsUiState.Success(resultData)
             }else{
                 _uiState.value = CoinsUiState.Error(result.toString())
@@ -44,12 +43,11 @@ class CoinsViewModel @Inject constructor(
     }
 
     fun getCoinDetail(id: String){
-        _uiDetailsState.value = CoinDetailsUiState.Loading
+        _uiDetailsState.value = CoinDetailsUiState.Hidden
         viewModelScope.launch(dispatcherProvider.main()) {
             val result = networkClient.getCoinDetail(id)
             if(result.isSuccess){
                 val resultData = result.getOrNull()
-                Timber.i("CoinDetails: ", resultData)
                 _uiDetailsState.value = CoinDetailsUiState.Success(resultData)
             }else{
                 _uiDetailsState.value = CoinDetailsUiState.Error(result.toString())

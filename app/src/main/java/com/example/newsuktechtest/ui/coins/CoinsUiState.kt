@@ -11,7 +11,6 @@ sealed class CoinsUiState {
 
 sealed class CoinDetailsUiState{
     object Hidden: CoinDetailsUiState()
-    object Loading: CoinDetailsUiState()
     data class Success(val coin: Coin?): CoinDetailsUiState()
     data class Error(val message: String): CoinDetailsUiState()
 }

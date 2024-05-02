@@ -15,6 +15,7 @@ class GetCoinsMapper @Inject constructor(
                     Coin(
                         name = it.name,
                         id = it.id,
+                        type = it.type,
                         coinDetails = null
                     )
                 } as ArrayList<Coin>
